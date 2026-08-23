@@ -10,6 +10,33 @@ from app.schemas import PatientCreate, PatientUpdate
 
 router = APIRouter(prefix="/patients", tags=["Patients"])
 
+from pydantic import BaseModel
+
+class FindPatientRequest(BaseModel):
+    phone_number: str
+
+
+@router.post("/find")
+def find_patient(payload: FindPatientRequest, db: Session = Depends(get_db)):
+    patient = (
+        db.query(Patient)
+        .filter(
+            Patient.phone_number == payload.phone_number,
+            Patient.deleted_at.is_(None),
+        )
+        .first()
+    )
+
+    return {
+        "data": None if not patient else {
+            "patient_id": str(patient.patient_id),
+            "first_name": patient.first_name,
+            "last_name": patient.last_name,
+            "phone_number": patient.phone_number,
+        },
+        "error": None,
+    }
+
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_patient(payload: PatientCreate, db: Session = Depends(get_db)):
