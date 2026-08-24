@@ -36,6 +36,22 @@ class PatientCreate(BaseModel):
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None
 
+    @field_validator(
+    "email",
+    "address_line_2",
+    "insurance_provider",
+    "insurance_member_id",
+    "preferred_language",
+    "emergency_contact_name",
+    "emergency_contact_phone",
+    mode="before"
+    )
+    @classmethod
+    def empty_to_none(cls, value):
+        if value == "":
+            return None
+        return value
+
     @field_validator("date_of_birth")
     @classmethod
     def validate_dob(cls, value):
@@ -43,13 +59,26 @@ class PatientCreate(BaseModel):
             raise ValueError("Date of birth cannot be in the future")
         return value
 
-    @field_validator("sex")
+    @field_validator("sex", mode="before")
     @classmethod
     def validate_sex(cls, value):
-        allowed = {"Male", "Female", "Other", "Decline to Answer"}
-        if value not in allowed:
+        value = str(value).strip().lower()
+
+        mapping = {
+            "m": "Male",
+            "male": "Male",
+            "f": "Female",
+            "female": "Female",
+            "other": "Other",
+            "decline": "Decline to Answer",
+            "decline to answer": "Decline to Answer",
+            "prefer not to say": "Decline to Answer",
+        }
+
+        if value not in mapping:
             raise ValueError("Invalid sex value")
-        return value
+
+        return mapping[value]
 
     @field_validator("phone_number", "emergency_contact_phone")
     @classmethod
