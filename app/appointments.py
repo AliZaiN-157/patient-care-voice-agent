@@ -2,10 +2,35 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Appointment
+from app.models import Appointment, Patient
 from app.schemas import AppointmentCreate
 
 router = APIRouter(prefix="/appointments", tags=["Appointments"])
+
+
+@router.get("")
+def list_appointments(db: Session = Depends(get_db)):
+    appointments = (
+        db.query(Appointment, Patient)
+        .outerjoin(Patient, Appointment.patient_id == Patient.patient_id)
+        .order_by(Appointment.appointment_date, Appointment.appointment_time)
+        .all()
+    )
+
+    return {
+        "data": [
+            {
+                "appointment_id": str(appt.appointment_id),
+                "patient_id": str(appt.patient_id),
+                "patient_name": f"{patient.first_name} {patient.last_name}" if patient else "Unknown",
+                "appointment_date": str(appt.appointment_date),
+                "appointment_time": appt.appointment_time,
+                "created_at": appt.created_at.isoformat(),
+            }
+            for appt, patient in appointments
+        ],
+        "error": None,
+    }
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
