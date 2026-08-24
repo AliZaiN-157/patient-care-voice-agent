@@ -45,11 +45,12 @@ def find_patient(payload: FindPatientRequest, db: Session = Depends(get_db)):
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_patient(payload: PatientCreate, db: Session = Depends(get_db)):
     patient = Patient(**payload.model_dump())
-
+    logger.info("Creating patient: %s", payload.model_dump())
     db.add(patient)
     db.commit()
     db.refresh(patient)
-
+    logger.info("Patient created successfully: %s", patient.patient_id)
+    
     return {
         "data": {
         "patient_id": str(patient.patient_id),

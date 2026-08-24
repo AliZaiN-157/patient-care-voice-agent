@@ -6,7 +6,7 @@ from app.patients import router as patient_router
 
 from fastapi import Request, Depends
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 
 from sqlalchemy.orm import Session
 from app.models import CallLog
@@ -72,3 +72,8 @@ async def vapi_webhook(
 @app.get("/")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/dashboard")
+def dashboard():
+    return FileResponse("templates/dashboard.html")
