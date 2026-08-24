@@ -38,3 +38,16 @@ class Patient(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     deleted_at = Column(DateTime, nullable=True)
+
+
+class CallLog(Base):
+    __tablename__ = "call_logs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    patient_id = Column(UUID(as_uuid=True), nullable=True)
+    vapi_call_id = Column(String(255), nullable=True, index=True)
+
+    transcript = Column(String, nullable=True)
+    summary = Column(String, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

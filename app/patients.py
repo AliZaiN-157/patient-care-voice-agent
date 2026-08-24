@@ -11,6 +11,10 @@ from app.schemas import PatientCreate, PatientUpdate
 router = APIRouter(prefix="/patients", tags=["Patients"])
 
 from pydantic import BaseModel
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 class FindPatientRequest(BaseModel):
     phone_number: str
@@ -48,10 +52,25 @@ def create_patient(payload: PatientCreate, db: Session = Depends(get_db)):
 
     return {
         "data": {
-            "patient_id": str(patient.patient_id),
-            "first_name": patient.first_name,
-            "last_name": patient.last_name,
-            "phone_number": patient.phone_number,
+        "patient_id": str(patient.patient_id),
+        "first_name": patient.first_name,
+        "last_name": patient.last_name,
+        "date_of_birth": str(patient.date_of_birth),
+        "sex": patient.sex,
+        "phone_number": patient.phone_number,
+        "email": patient.email,
+        "address_line_1": patient.address_line_1,
+        "address_line_2": patient.address_line_2,
+        "city": patient.city,
+        "state": patient.state,
+        "zip_code": patient.zip_code,
+        "insurance_provider": patient.insurance_provider,
+        "insurance_member_id": patient.insurance_member_id,
+        "preferred_language": patient.preferred_language,
+        "emergency_contact_name": patient.emergency_contact_name,
+        "emergency_contact_phone": patient.emergency_contact_phone,
+        "created_at": patient.created_at.isoformat(),
+        "updated_at": patient.updated_at.isoformat(),
         },
         "error": None,
     }
