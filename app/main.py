@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.database import Base, engine, get_db
 from app import models
 from app.patients import router as patient_router
+from app.appointments import router as appointment_router
 
 from fastapi import Request, Depends
 from fastapi.exceptions import RequestValidationError
@@ -15,6 +16,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+app.include_router(appointment_router)
 app.include_router(patient_router)
 
 @app.exception_handler(RequestValidationError)

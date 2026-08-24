@@ -125,3 +125,8 @@ class PatientUpdate(BaseModel):
     preferred_language: Optional[str] = None
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None
+
+class AppointmentCreate(BaseModel):
+    patient_id: str
+    appointment_date: date
+    appointment_time: str

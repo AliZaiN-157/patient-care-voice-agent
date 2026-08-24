@@ -39,6 +39,17 @@ class Patient(Base):
 
     deleted_at = Column(DateTime, nullable=True)
 
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    appointment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    patient_id = Column(UUID(as_uuid=True), nullable=False)
+
+    appointment_date = Column(Date, nullable=False)
+    appointment_time = Column(String(20), nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
 
 class CallLog(Base):
     __tablename__ = "call_logs"
