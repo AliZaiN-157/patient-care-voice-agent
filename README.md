@@ -300,7 +300,7 @@ Call transcripts are stored through the Vapi end-of-call webhook.
 
 ## Known Limitations / Trade-offs
 
-* This is a technical assessment and is **not HIPAA-compliant production software**.
+* This is a quick prototype and is **not HIPAA-compliant production software**.
 * No real patient data should be used.
 * Appointment scheduling uses mock availability rather than a real EHR or scheduling system.
 * Duplicate detection currently uses phone number matching.
@@ -327,14 +327,3 @@ requirements.txt
 .env.example
 README.md
 ```
-
-## Submission
-
-Include:
-
-* Repository URL
-* Live Vapi phone number
-* Railway API base URL
-* Any notes needed for testing
-
-The assessment prioritizes a working end-to-end system, conversational quality, clean architecture, resilience, and clear documentation.
